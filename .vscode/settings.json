@@ -1,0 +1,6 @@
+{
+    "python.analysis.extraPaths": [
+        "c:/Users/Jake/Desktop/NewsExtractorBot/."
+    ],
+    "python.terminal.activateEnvironment": false
+}

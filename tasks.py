@@ -16,6 +16,7 @@ excel = Files()
 http = HTTP()
 
 # elements locators
+accept_privacy_btn = "//*[contains(text(), 'I Accept')]"
 search_icon = "//button[@class='SearchOverlay-search-button']"
 search_input_field = "//input[@placeholder='Keyword Search...']"
 sort_news_list = "//select[@class='Select-input']"
@@ -54,6 +55,12 @@ def open_news_site():
 
 
 def filter_news(phrase):
+    try:
+        selenium.wait_until_element_is_visible(accept_privacy_btn, 6)
+        selenium.click_element(accept_privacy_btn)
+        logging.info("Privacy policy accepted")
+    except Exception as e:
+        logging.info("Privacy policy window not detected")
     selenium.wait_until_element_is_visible(search_icon)
     selenium.click_element(search_icon)
     selenium.wait_until_element_is_visible(search_input_field)

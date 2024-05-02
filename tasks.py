@@ -39,6 +39,8 @@ def extract_news():
 def define_search_params():
     key_params = workitems.inputs.current.payload
     global search_phrase
+    if "search_phrase" not in key_params.keys():
+        key_params = key_params["payload"]
     search_phrase = key_params["search_phrase"]
     global required_months_count
     required_months_count = key_params["required_month_count"]

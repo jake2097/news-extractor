@@ -1,0 +1,8 @@
+[
+  {
+      "payload": {
+         "search_phrase": "Apple",
+         "required_month_count": 1
+      }
+  }
+]

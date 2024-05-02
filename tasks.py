@@ -1,4 +1,5 @@
-from robocorp.tasks import task
+from robocorp.tasks import task, teardown
+from robocorp import workitems
 import logging
 import time
 import os
@@ -21,18 +22,27 @@ sort_news_list = "//select[@class='Select-input']"
 news_title_elems = "//div[@class='PageList-items-item']//div[@class='PagePromo']//div[@class='PagePromo-content']//bsp-custom-headline//div[@class='PagePromo-title']//a/span"
 
 # main params
-search_phrase = "Apple"
-required_months_count = 1
+search_phrase = None
+required_months_count = 0
 news_list = []
 
 @task
 def extract_news():
+    define_search_params()
     open_news_site()
     filter_news(search_phrase)
     sort_news_by_newest()
     collect_news_info()
     create_excel_file(news_list)
-    
+
+
+def define_search_params():
+    key_params = workitems.inputs.current.payload
+    global search_phrase
+    search_phrase = key_params["search_phrase"]
+    global required_months_count
+    required_months_count = key_params["required_month_count"]
+
 
 def open_news_site():
     selenium.open_chrome_browser("https://apnews.com/")
@@ -134,3 +144,8 @@ def create_excel_file(news):
     excel.remove_worksheet("Sheet")
     excel.save_workbook("./output/News Summary.xlsx")
     logging.info("XLSX file with news summary has been created")
+
+
+@teardown(scope="task")
+def after_each(task):
+    selenium.screenshot(None, "output/screenshot.png")

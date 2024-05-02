@@ -1,8 +1,6 @@
 from robocorp.tasks import task, teardown
 from robocorp import workitems
-import logging
 import time
-import os
 from output.news import News
 from output.dates_processor import DatesProcessor
 from RPA.HTTP import HTTP
@@ -10,6 +8,12 @@ from RPA.Excel.Files import Files
 import requests
 from RPA.Excel.Files import Files
 from RPA.Browser.Selenium import Selenium
+import logging
+
+logging.basicConfig()
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
 
 selenium = Selenium()
 excel = Files()
@@ -51,36 +55,34 @@ def open_news_site():
     selenium.open_chrome_browser("https://apnews.com/")
     selenium.maximize_browser_window()
     selenium.set_selenium_implicit_wait(30)
-    logging.info("News website opened")
+    logger.info("News website opened")
 
 
 def filter_news(phrase):
     try:
-        selenium.wait_until_element_is_visible(accept_privacy_btn, 6)
+        selenium.wait_until_element_is_visible(accept_privacy_btn, 4)
         selenium.click_element(accept_privacy_btn)
-        logging.info("Privacy policy accepted")
+        logger.info("Privacy policy accepted")
     except Exception as e:
-        logging.info("Privacy policy window not detected")
+        logger.info("Privacy policy window not detected")
     selenium.wait_until_element_is_visible(search_icon)
     selenium.click_element(search_icon)
     selenium.wait_until_element_is_visible(search_input_field)
     selenium.input_text(search_input_field, phrase)
     time.sleep(2)
     selenium.press_keys(None, "RETURN")
-    logging.info("News filtered by key phrase")
+    logger.info("News filtered by key phrase")
     time.sleep(5)
 
 
 def sort_news_by_newest():
     selenium.wait_until_element_is_visible(sort_news_list)
     selenium.select_from_list_by_label(sort_news_list, "Newest")
-    logging.info("News sorted by newest")
+    logger.info("News sorted by newest")
     time.sleep(10)
 
 
 def download_news_image(img_url, path_to_save, image_name):
-    if not os.path.exists(path_to_save):
-        os.makedirs(path_to_save)
     img_data = requests.get(img_url).content
     with open(f'{path_to_save}/{image_name}', 'wb') as handler:
         handler.write(img_data)
@@ -113,13 +115,12 @@ def collect_news_info():
         try:
             news_image_elem = selenium.get_webelement(f"//bsp-list-loadmore//div[2]//div[{i+1}]//div//div[1]//a//picture/img")
             img_download_url = selenium.get_element_attribute(news_image_elem, "src")
-            download_news_image(img_download_url, "output/images", image_name)
+            download_news_image(img_download_url, "output", image_name)
         except Exception as e:
             image_name = "Image absent"
-            print(e)
         news_object = get_news_object(news_title, news_date, news_description, image_name, search_phrase)
         news_list.append(news_object)
-    logging.info("News titles and descriptions obtained, images downloaded")
+    logger.info("News titles and descriptions obtained, images downloaded")
 
 
 def get_title_elem(i):
@@ -154,9 +155,10 @@ def create_excel_file(news):
     excel.create_worksheet(name="News Info",content=excel_data,header=True)
     excel.remove_worksheet("Sheet")
     excel.save_workbook("./output/News Summary.xlsx")
-    logging.info("XLSX file with news summary has been created")
+    logger.info("XLSX file with news summary has been created")
 
 
 @teardown(scope="task")
 def after_each(task):
-    selenium.screenshot(None, "output/screenshot.png")
+    if task.failed:
+        selenium.screenshot(None, "output/screenshot.png")

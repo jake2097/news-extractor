@@ -1,1 +1,7 @@
-2024-05-02 17:40:34,569 - RPA.core.certificates - INFO - Truststore injection done, using system certificate store to validate HTTPS.
+2024-05-02 20:00:08,146 - RPA.core.certificates - INFO - Truststore injection done, using system certificate store to validate HTTPS.
+INFO:tasks:News website opened
+INFO:tasks:Privacy policy window not detected
+INFO:tasks:News filtered by key phrase
+INFO:tasks:News sorted by newest
+INFO:tasks:News titles and descriptions obtained, images downloaded
+INFO:tasks:XLSX file with news summary has been created

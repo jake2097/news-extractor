@@ -1,8 +1,8 @@
 
 Collecting tasks from: tasks.py
 ============================ Running: [96mextract_news[0m =============================
-Element with locator '//bsp-list-loadmore//div[2]//div[7]//div//div[1]//a//picture/img' not found.
-Element with locator '//bsp-list-loadmore//div[2]//div[13]//div//div[1]//a//picture/img' not found.
+Element with locator '//bsp-list-loadmore//div[2]//div[8]//div//div[1]//a//picture/img' not found.
+Element with locator '//bsp-list-loadmore//div[2]//div[14]//div//div[1]//a//picture/img' not found.
 [96mextract_news[0m status: PASS
 ================================================================================
 Robocorp Log (html): c:\Users\Jake\Desktop\news-extractor\output\log.html

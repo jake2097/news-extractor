@@ -79,6 +79,8 @@ def sort_news_by_newest():
 
 
 def download_news_image(img_url, path_to_save, image_name):
+    if not os.path.exists(path_to_save):
+        os.makedirs(path_to_save)
     img_data = requests.get(img_url).content
     with open(f'{path_to_save}/{image_name}', 'wb') as handler:
         handler.write(img_data)
